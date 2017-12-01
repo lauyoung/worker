@@ -1,8 +1,21 @@
 ﻿#include "utils.h"
 
+#include <QDateTime>
+
 Utils::Utils()
 {
 
+}
+QString Utils::getRandomNumber()
+{
+	QDateTime time = QDateTime::currentDateTime();
+	int timeT = time.toTime_t();
+
+	qsrand(10000);
+	QString randomNum = QString::number(qrand());
+	QString result = QString::number(timeT) + randomNum;
+
+	return result;
 }
 
 bool Utils::getMatchStr(const QString &srcStr, const QString &pattern, QString &result)

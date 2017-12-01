@@ -5,6 +5,9 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QByteArray>
 
 #include "userdataitem.h"
 #include "utils.h"
@@ -18,15 +21,15 @@ public:
         RequestQRCode,
         RequestLoginStatus,
         RequestNewLoginPage,
+		RequestWebWxinit,
     };
 
     static NetworkHelper *instance(QObject *parent = 0);
 
     void getUUid(int clientKey);
-    void checkLoginStatus(const UserDataItem &item);
-    void newLoginPage(const UserDataItem &item);
-
-
+    void checkLoginStatus(int clientKey, const UserDataItem &item);
+    void newLoginPage(int clientKey, const UserDataItem &item);
+	void webWxInit(int clientKey, const UserDataItem &item);
 
     bool setCookie(const QByteArray &data, QMap<QString, QVariant> &map);
 
@@ -36,8 +39,9 @@ private:
 
 signals:
     void getUUidFinished(int clientKey, const QByteArray &data);
-    void checkLoginStatusFinished(const QByteArray &data);
-    void newLoginPageFinished(const QByteArray &data, QMap<QString, QVariant> &map);
+    void checkLoginStatusFinished(int clientKey, const QByteArray &data);
+    void newLoginPageFinished(int clientKey, const QByteArray &data, QMap<QString, QVariant> &map);
+	void webWxinitFinished(int clientKey, const QByteArray &data);
 
 public slots:
     void onLoadHttpPostFinished();

@@ -6,7 +6,8 @@
 #include "userdataitem.h"
 #include "workerclient.h"
 
-//typedef void (Controller::*reqFunc)(int, const QJsonObject&);
+class Controller;
+typedef void (Controller::*reqFunc)(int, const QJsonObject&);
 
 class Controller : public QObject
 {
@@ -18,22 +19,23 @@ public:
 
 private:
 	void setupSignals();
+
     void netGetUUid(int clientKey, const QJsonObject &obj);
-    void netCheckLoginStatus();
-    void netNewLoginPage();
+    void netCheckLoginStatus(int clientKey, const QJsonObject &obj);
+    void netNewLoginPage(int clientKey);
+	void netWebWxInit(int clientKey, const QJsonObject &obj);
 
-    void initReqFunc();
-
+    void initReqFuncMap();
     void processMsg(int clientKey, const QString &type, const QJsonObject &obj);
-
-    void sendMsg(const QJsonObject &obj);
+    void sendMsg(int clientKey, const QString &type, const QJsonObject &obj);
 
 signals:
 
 public slots:
     void onGetUUidFinished(int clientKey, const QByteArray &data);
-    void onCheckLoginStatusFinished(const QByteArray &data);
-    void onNewLoginPageFinished(const QByteArray &data, QMap<QString, QVariant> &map);
+    void onCheckLoginStatusFinished(int clientKey, const QByteArray &data);
+    void onNewLoginPageFinished(int clientKey, const QByteArray &data, QMap<QString, QVariant> &map);
+	void onWebWxinitFinished(int clientKey, const QByteArray &data);
 
 private slots:
     void onRecvMsg(const QString &str);
@@ -42,7 +44,7 @@ private:
     WorkerClient      *m_workerClient;
     UserDataItem       m_UserData;
 
-//    QMap<QString, reqFunc> m_typeFuncMap;
+    QMap<QString, reqFunc> m_typeFuncMap;
 
 };
 
